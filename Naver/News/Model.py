@@ -5,7 +5,6 @@ from requests import get
 from time import time, sleep
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup as BS
-from fake_useragent import UserAgent
 
 class Cralwer() :
     def __init__(self, *args, **kwargs) :
@@ -22,7 +21,6 @@ class Cralwer() :
             "생활" : "living", "세계" : "world", "과학" : "science"
         }
 
-        self.fake_headers = {"User-Agent" : UserAgent().chrome}
         self.start, self.end = self.get_date()
 
     def get_date(self) :
@@ -93,7 +91,7 @@ class Cralwer() :
             contents[idx]['link'] = link
             contents[idx]['category'] = category
 
-            news_res = get(link, headers = self.fake_headers)
+            news_res = get(link)
             soup = BS(news_res.content, 'lxml')
             _ = [s.extract() for s in soup(ext_tags)]
 
@@ -131,8 +129,8 @@ class Cralwer() :
                 for category, category_link in links.items() :
                     print("[ {} ] Crawling Date : [ {} ] Category : [ {} ]".format(
                         datetime.now().strftime("%Y/%m/%d %H:%M:%S"), date, category))
-                    
-                    category_res = get(category_link, headers = self.fake_headers)
+
+                    category_res = get(category_link)
 
                     soup = BS(category_res.content, 'lxml')
 
